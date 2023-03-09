@@ -1,0 +1,32 @@
+.course-form__item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.course-form__item textarea {
+  width: 100%;
+  height: 150px;
+  border: 1px solid rgb(189, 189, 12);
+  border-radius: 0px
+}
+
+.course-form__title {
+  width: 100%;
+  text-align: center;
+  font-size: 24px;
+  display: inline-block;
+}
+
+.authors-list {
+  list-style: none;
+}
+
+.authors-list__item {
+  margin-bottom: 15px;
+}
+
+.authors-list__name {
+  width: 150px;
+  display: inline-block;
+}

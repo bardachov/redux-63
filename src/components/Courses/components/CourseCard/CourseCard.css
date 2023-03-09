@@ -1,0 +1,24 @@
+.courseCard {
+  display: flex;
+  border: 1px solid green;
+  margin: 10px 0px;
+}
+
+.courseCard__description {
+  width: 70%;
+}
+
+.courseCard__details {
+  width: 30%;
+}
+
+.courseCard__authors span {
+  margin-right: 10px;
+  position: relative;
+}
+
+.courseCard__authors span:not(:last-child)::after {
+  position: absolute;
+  content: ',';
+
+}
