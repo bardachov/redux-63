@@ -1,7 +1,7 @@
 # Redux
 ## Lesson 1
- - Розбираємо фундаментал редакса https://redux.js.org/tutorials/fundamentals/part-1-overview
- - Встановлення npm install react-redux redux
+ - Коротко пройдемося по redux wdataflow https://redux.js.org/tutorials/fundamentals/part-2-concepts-data-flow
+ - Встановлення yarn add react-redux redux
  - Заносимо список курсів/додавання курсу в стору
  
  Steps: 
