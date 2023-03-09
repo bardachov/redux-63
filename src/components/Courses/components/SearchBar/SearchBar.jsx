@@ -40,11 +40,11 @@ const SearchBar = ({ resetCourses, setSearchKey, searchKey, searchCourse }) => {
 	);
 };
 
-SearchBar.propTypes = {
-	resetCourses: PropTypes.func.isRequired,
-	setSearchKey: PropTypes.func.isRequired,
-	searchCourse: PropTypes.func.isRequired,
-	searchKey: PropTypes.string,
-};
+// SearchBar.propTypes = {
+// 	resetCourses: PropTypes.func.isRequired,
+// 	setSearchKey: PropTypes.func.isRequired,
+// 	searchCourse: PropTypes.func.isRequired,
+// 	searchKey: PropTypes.string,
+// };
 
 export default SearchBar;

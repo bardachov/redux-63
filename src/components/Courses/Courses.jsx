@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import Button from '../../common/Button/Button';
 import CourseCard from './components/CourseCard/CourseCard';
@@ -7,42 +8,53 @@ import SearchBar from './components/SearchBar/SearchBar';
 import pipeDuration from '../../helpers/pipeDuration';
 
 import './Courses.css';
-import { useCourses } from '../../hooks/useCourses';
+import { selectCourses } from '../../store/courses/selectors';
+import { selectAuthors } from '../../store/authors/selectors';
+
+const getFilteredCourses = (courses, searchKey) => {
+	return courses.filter((course) => {
+		const regEx = new RegExp(searchKey, 'gi');
+
+		return regEx.test(course.title);
+	});
+};
 
 export const Courses = () => {
 	const navigate = useNavigate();
 
-	const { courses, authorsList } = useCourses();
+	const courses = useSelector(selectCourses);
+	const authorsList = useSelector(selectAuthors);
 
-	const [filteredCourses, setFilteredCourses] = useState(courses);
+	// const [filteredCourses, setFilteredCourses] = useState(courses);
 	const [searchKey, setSearchKey] = useState('');
+	const filteredCourses = getFilteredCourses(courses, searchKey);
 
-	const resetCourses = () => {
-		setFilteredCourses(courses);
-	};
+	// const resetCourses = () => {
+	// 	setFilteredCourses(courses);
+	// };
 
-	const searchCourse = () => {
-		if (!searchKey) {
-			resetCourses();
-			return;
-		}
+	// const searchCourse = () => {
+	// if (!searchKey) {
+	// 	resetCourses();
+	// 	return;
+	// }
 
-		const course = courses.find((course) => {
-			return course.id === searchKey;
-		});
+	// const course = courses.find((course) => {
+	// 	return course.id === searchKey;
+	// });
 
-		if (course) {
-			setFilteredCourses([course]);
-			return;
-		}
+	// if (course) {
+	// 	setFilteredCourses([course]);
+	// 	return;
+	// }
 
-		setFilteredCourses(
-			courses.filter((course) => {
-				const regEx = new RegExp(searchKey, 'gi');
-				return regEx.test(course.title);
-			})
-		);
-	};
+	// setFilteredCourses(
+	// 	courses.filter((course) => {
+	// 		const regEx = new RegExp(searchKey, 'gi');
+	// 		return regEx.test(course.title);
+	// 	})
+	// );
+	// };
 
 	const CoursesList = () => {
 		return (
@@ -87,10 +99,10 @@ export const Courses = () => {
 				<div className='col'>
 					<nav className='row'>
 						<SearchBar
-							resetCourses={resetCourses}
+							// resetCourses={resetCourses}
 							searchKey={searchKey}
 							setSearchKey={setSearchKey}
-							searchCourse={searchCourse}
+							// searchCourse={searchCourse}
 						/>
 
 						<div className='col-6 justify-content-end d-flex'>

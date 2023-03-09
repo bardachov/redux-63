@@ -5,31 +5,33 @@ import PropTypes from 'prop-types';
 import Button from '../../../../common/Button/Button';
 import Input from '../../../../common/Input/Input';
 
-const Authors = ({
-	availableAuthors,
-	courseAuthors,
-	setCourseAuthors,
-	setAvailableAuthors,
-}) => {
-	const [authorName, setAuthorName] = useState('');
+import { useSelector, useDispatch } from 'react-redux';
+import { selectAuthors } from '../../../../store/authors/selectors';
+import { addAuthor as addAuthorAction } from '../../../../store/authors/actionCreators';
 
-	const addAuthor = (e) => {
+const Authors = ({ courseAuthors, setCourseAuthors }) => {
+	const [authorName, setAuthorName] = useState('');
+	const dispatch = useDispatch();
+	const authors = useSelector(selectAuthors);
+
+	const addAuthorHandler = (e) => {
 		e.preventDefault();
 		const { id } = e.target;
-		const author = availableAuthors.find((author) => author.id === id);
+
+		const author = authors.find((author) => author.id === id);
+		if (courseAuthors.includes(author)) return false;
+
 		setCourseAuthors((courseAuthors) => [...courseAuthors, author]);
-		setAvailableAuthors(availableAuthors.filter((author) => author.id !== id));
 	};
 
-	const removeAuthor = (e) => {
+	const removeAuthorHandler = (e) => {
 		e.preventDefault();
 		const { id } = e.target;
-		const author = courseAuthors.find((author) => author.id === id);
-		setAvailableAuthors((availableAuthors) => [...availableAuthors, author]);
+
 		setCourseAuthors(courseAuthors.filter((author) => author.id !== id));
 	};
 
-	const createAuthor = (e) => {
+	const createAuthorHandler = (e) => {
 		e.preventDefault();
 
 		if (authorName.length < 2) {
@@ -37,12 +39,12 @@ const Authors = ({
 			return;
 		}
 
-		const newAuthor = {
-			id: uuidv4(),
-			name: authorName,
-		};
-
-		setAvailableAuthors((availableAuthors) => [...availableAuthors, newAuthor]);
+		dispatch(
+			addAuthorAction({
+				id: uuidv4(),
+				name: authorName,
+			})
+		);
 		setAuthorName('');
 	};
 
@@ -85,7 +87,7 @@ const Authors = ({
 					</div>
 					<Button
 						buttonText='Create author'
-						onClick={createAuthor}
+						onClick={createAuthorHandler}
 						buttonId='5'
 					></Button>
 				</div>
@@ -95,26 +97,26 @@ const Authors = ({
 				<span className='course-form__title'>Authors</span>
 				<AuthorsList
 					buttonText='Add author'
-					authors={availableAuthors}
-					clickEvent={addAuthor}
+					authors={authors}
+					clickEvent={addAuthorHandler}
 				/>
 
 				<span className='course-form__title'>Course Authors</span>
 				<AuthorsList
 					buttonText='Delete author'
 					authors={courseAuthors}
-					clickEvent={removeAuthor}
+					clickEvent={removeAuthorHandler}
 				/>
 			</div>
 		</div>
 	);
 };
 
-Authors.propTypes = {
-	availableAuthors: PropTypes.array,
-	courseAuthors: PropTypes.array,
-	setCourseAuthors: PropTypes.func.isRequired,
-	setAvailableAuthors: PropTypes.func.isRequired,
-};
+// Authors.propTypes = {
+// 	availableAuthors: PropTypes.array,
+// 	courseAuthors: PropTypes.array,
+// 	setCourseAuthors: PropTypes.func.isRequired,
+// 	setAvailableAuthors: PropTypes.func.isRequired,
+// };
 
 export default Authors;

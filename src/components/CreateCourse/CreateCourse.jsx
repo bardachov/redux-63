@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import moment from 'moment';
 
@@ -7,21 +8,19 @@ import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import Authors from './components/Authors/Authors';
 import pipeDuration from '../../helpers/pipeDuration';
+import { addCourse } from '../../store/courses/actionCreators';
 
 import './CreateCourse.css';
-import { CoursesContext } from '../../providers/CoursesProvider';
 
 export const CreateCourse = () => {
-	const { authorsList, setAuthorsList, setCourses } =
-		useContext(CoursesContext);
-
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
 	const [duration, setDuration] = useState(0);
 	const [courseAuthors, setCourseAuthors] = useState([]);
-	const [availableAuthors, setAvailableAuthors] = useState(authorsList);
+	// const [availableAuthors, setAvailableAuthors] = useState(authorsList);
 
 	const newCourse = () => {
 		return {
@@ -36,19 +35,7 @@ export const CreateCourse = () => {
 
 	const createCourse = (e) => {
 		e.preventDefault();
-
-		const isError =
-			title.length < 2 ||
-			description.length < 2 ||
-			duration < 1 ||
-			courseAuthors.size < 1;
-		if (isError) {
-			alert('Please, fill in all fields');
-			return false;
-		}
-
-		setCourses((courses) => [...courses, newCourse()]);
-		setAuthorsList([...availableAuthors, ...courseAuthors]);
+		dispatch(addCourse(newCourse()));
 		navigate('/courses');
 	};
 
@@ -107,10 +94,10 @@ export const CreateCourse = () => {
 						</div>
 
 						<Authors
-							availableAuthors={availableAuthors}
+							// availableAuthors={[]}
 							courseAuthors={courseAuthors}
 							setCourseAuthors={setCourseAuthors}
-							setAvailableAuthors={setAvailableAuthors}
+							// setAvailableAuthors={() => {}}
 						/>
 
 						<div className='d-flex justify-content-between'>
