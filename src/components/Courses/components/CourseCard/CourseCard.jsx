@@ -1,9 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
+import { useDispatch } from 'react-redux';
 import Button from '../../../../common/Button/Button';
-
+import {
+	addCoursetoFavorite,
+	deleteCourse,
+} from '../../../../store/courses/actionCreators';
 import './CourseCard.css';
 
 const CourseCard = ({
@@ -15,6 +18,7 @@ const CourseCard = ({
 	id,
 }) => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	return (
 		<article className='courseCard row'>
@@ -42,6 +46,21 @@ const CourseCard = ({
 						buttonText='Show course'
 						onClick={() => {
 							navigate(`/courses/${id}`);
+						}}
+					/>
+
+					<Button
+						buttonText='Del'
+						buttonId={`Del-${id}`}
+						onClick={() => {
+							dispatch(deleteCourse(id));
+						}}
+					/>
+					<Button
+						buttonText='Add to favorite'
+						buttonId={`favorite-${id}`}
+						onClick={() => {
+							dispatch(addCoursetoFavorite(id));
 						}}
 					/>
 				</div>
