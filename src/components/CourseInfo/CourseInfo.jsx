@@ -1,11 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import pipeDuration from '../../helpers/pipeDuration';
-import { CoursesContext } from '../../providers/CoursesProvider';
+import { selectCourses } from '../../store/courses/selectors';
+import { selectAuthors } from '../../store/authors/selectors';
 
 export const CourseInfo = () => {
-	const { courses, authorsList } = useContext(CoursesContext);
+	const courses = useSelector(selectCourses);
+	const authorsList = useSelector(selectAuthors);
 	const { courseId } = useParams();
 
 	const course = courses.find((course) => course.id === courseId);

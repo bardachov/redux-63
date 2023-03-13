@@ -7,7 +7,11 @@ import Input from '../../../../common/Input/Input';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAuthors } from '../../../../store/authors/selectors';
-import { addAuthor as addAuthorAction } from '../../../../store/authors/actionCreators';
+
+import {
+	addAuthor as addAuthorAction,
+	deleteAuthor,
+} from '../../../../store/authors/slice';
 
 const Authors = ({ courseAuthors, setCourseAuthors }) => {
 	const [authorName, setAuthorName] = useState('');
@@ -24,10 +28,7 @@ const Authors = ({ courseAuthors, setCourseAuthors }) => {
 		setCourseAuthors((courseAuthors) => [...courseAuthors, author]);
 	};
 
-	const removeAuthorHandler = (e) => {
-		e.preventDefault();
-		const { id } = e.target;
-
+	const removeAuthor = (id) => {
 		setCourseAuthors(courseAuthors.filter((author) => author.id !== id));
 	};
 
@@ -48,7 +49,7 @@ const Authors = ({ courseAuthors, setCourseAuthors }) => {
 		setAuthorName('');
 	};
 
-	const AuthorsList = ({ authors, buttonText, clickEvent }) => {
+	const AuthorsList = ({ authors, buttonText, clickEvent, showDelete }) => {
 		return (
 			<ul className='authors-list'>
 				{authors.map(({ id, name }) => {
@@ -60,6 +61,16 @@ const Authors = ({ courseAuthors, setCourseAuthors }) => {
 								buttonId={id}
 								onClick={clickEvent}
 							/>
+							{showDelete && (
+								<Button
+									buttonText='Del from store'
+									buttonId={'del author' + id}
+									onClick={() => {
+										dispatch(deleteAuthor(id));
+										removeAuthor(id);
+									}}
+								/>
+							)}
 						</li>
 					);
 				})}
@@ -99,13 +110,17 @@ const Authors = ({ courseAuthors, setCourseAuthors }) => {
 					buttonText='Add author'
 					authors={authors}
 					clickEvent={addAuthorHandler}
+					showDelete={true}
 				/>
 
 				<span className='course-form__title'>Course Authors</span>
 				<AuthorsList
 					buttonText='Delete author'
 					authors={courseAuthors}
-					clickEvent={removeAuthorHandler}
+					clickEvent={(e) => {
+						e.preventDefault();
+						removeAuthor(e.target.id);
+					}}
 				/>
 			</div>
 		</div>

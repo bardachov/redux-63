@@ -21,16 +21,45 @@
 // 3. Створюємо редюсер
 // 4. створюємо стору(store)
 
-import { legacy_createStore as createStore, combineReducers } from 'redux';
-import { devToolsEnhancer } from '@redux-devtools/extension';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import {
+	persistStore,
+	persistReducer,
+	FLUSH,
+	REHYDRATE,
+	PAUSE,
+	PERSIST,
+	PURGE,
+	REGISTER,
+} from 'redux-persist';
+
+import storage from 'redux-persist/lib/storage';
+
 import { coursesReducer } from './courses/reducer';
-import { authorReducer } from './authors/reducer';
+import { authorReducer } from './authors/slice';
 
-const enhancer = devToolsEnhancer();
+const persistConfig = {
+	key: 'root',
+	version: 1,
+	storage,
+};
 
-const rootReducer = combineReducers({
-	courses: coursesReducer,
-	authors: authorReducer,
+const persistedReducer = persistReducer(
+	persistConfig,
+	combineReducers({
+		courses: coursesReducer,
+		authors: authorReducer,
+	})
+);
+
+export const store = configureStore({
+	reducer: persistedReducer,
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware({
+			serializableCheck: {
+				ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+			},
+		}),
 });
 
-export const store = createStore(rootReducer, enhancer);
+export let persistor = persistStore(store);
