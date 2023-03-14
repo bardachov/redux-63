@@ -12,3 +12,30 @@ export const fetchAuthors = createAsyncThunk(
 		}
 	}
 );
+
+export const deleteAuthor = createAsyncThunk(
+	'authors/deleteItem',
+	async (id, thunkApi) => {
+		try {
+			const response = await axios.delete(`/authors/${id}`);
+			return {
+				id,
+				message: response.data.result,
+			};
+		} catch (error) {
+			return thunkApi.rejectWithValue(error.message);
+		}
+	}
+);
+
+export const addAuthor = createAsyncThunk(
+	'authors/addItem',
+	async (name, thunkApi) => {
+		try {
+			const response = await axios.post(`/authors/add`, { name });
+			return response.data.result;
+		} catch (error) {
+			return thunkApi.rejectWithValue(error.message);
+		}
+	}
+);

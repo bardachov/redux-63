@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 // import { mockedCoursesList as initState } from '../../constants';
-import { addCourse, addCoursetoFavorite, deleteCourse } from './actionCreators';
-import { fetchCourses } from './api';
+import { addCoursetoFavorite } from './actionCreators';
+import { fetchCourses, addCourse, deleteCourse } from './api';
 
 export const coursesReducer = createReducer(
 	{
@@ -11,12 +11,14 @@ export const coursesReducer = createReducer(
 	},
 	(builder) => {
 		builder
-			.addCase(addCourse, (state, action) => {
-				state.push(action.payload);
+			.addCase(addCourse.fulfilled, (state, action) => {
+				state.items.push(action.payload);
 			})
-			.addCase(deleteCourse, (state, action) => {
-				const index = state.findIndex(({ id }) => id === action.payload);
-				state.splice(index, 1);
+			.addCase(deleteCourse.fulfilled, (state, action) => {
+				const index = state.items.findIndex(
+					({ id }) => id === action.payload.id
+				);
+				state.items.splice(index, 1);
 			})
 			.addCase(addCoursetoFavorite, (courses, action) => {
 				const index = courses.findIndex(({ id }) => id === action.payload);

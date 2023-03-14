@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { v4 as uuidv4 } from 'uuid';
-import moment from 'moment';
 
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import Authors from './components/Authors/Authors';
 import pipeDuration from '../../helpers/pipeDuration';
-import { addCourse } from '../../store/courses/actionCreators';
+
+import { addCourse } from '../../store/courses/api';
 
 import './CreateCourse.css';
 
@@ -20,22 +19,19 @@ export const CreateCourse = () => {
 	const [description, setDescription] = useState('');
 	const [duration, setDuration] = useState(0);
 	const [courseAuthors, setCourseAuthors] = useState([]);
-	// const [availableAuthors, setAvailableAuthors] = useState(authorsList);
-
-	const newCourse = () => {
-		return {
-			id: uuidv4(),
-			title: title,
-			description: description,
-			duration: duration,
-			authors: courseAuthors.map(({ id }) => id),
-			creationDate: moment().format('MM/DD/YYYY'),
-		};
-	};
 
 	const createCourse = (e) => {
 		e.preventDefault();
-		dispatch(addCourse(newCourse()));
+
+		dispatch(
+			addCourse({
+				title: title,
+				description: description,
+				duration: duration,
+				authors: courseAuthors.map(({ id }) => id),
+			})
+		);
+
 		navigate('/courses');
 	};
 
@@ -50,7 +46,7 @@ export const CreateCourse = () => {
 				setDescription(value);
 				break;
 			case 'duration':
-				setDuration(value);
+				setDuration(Number(value));
 				break;
 			default:
 				break;

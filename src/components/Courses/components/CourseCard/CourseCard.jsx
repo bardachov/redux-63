@@ -3,10 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import Button from '../../../../common/Button/Button';
-import {
-	addCoursetoFavorite,
-	deleteCourse,
-} from '../../../../store/courses/actionCreators';
+
+import { deleteCourse } from '../../../../store/courses/api';
 import './CourseCard.css';
 
 const CourseCard = ({
@@ -54,13 +52,6 @@ const CourseCard = ({
 						buttonId={`Del-${id}`}
 						onClick={() => {
 							dispatch(deleteCourse(id));
-						}}
-					/>
-					<Button
-						buttonText='Add to favorite'
-						buttonId={`favorite-${id}`}
-						onClick={() => {
-							dispatch(addCoursetoFavorite(id));
 						}}
 					/>
 				</div>

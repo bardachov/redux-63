@@ -14,3 +14,30 @@ export const fetchCourses = createAsyncThunk(
 		}
 	}
 );
+
+export const addCourse = createAsyncThunk(
+	'courses/addItem',
+	async (newCourse, thunkApi) => {
+		try {
+			const response = await axios.post('/courses/add', newCourse);
+			return response.data.result;
+		} catch (e) {
+			return thunkApi.rejectWithValue(e.message);
+		}
+	}
+);
+
+export const deleteCourse = createAsyncThunk(
+	'courses/deleteItem',
+	async (id, thunkApi) => {
+		try {
+			const response = await axios.delete(`/courses/${id}`);
+			return {
+				id,
+				message: response.data.result,
+			};
+		} catch (error) {
+			return thunkApi.rejectWithValue(error.message);
+		}
+	}
+);

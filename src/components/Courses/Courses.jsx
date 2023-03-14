@@ -24,37 +24,8 @@ export const Courses = () => {
 
 	const courses = useSelector(selectCourses);
 	const authorsList = useSelector(selectAuthors);
-
-	// const [filteredCourses, setFilteredCourses] = useState(courses);
 	const [searchKey, setSearchKey] = useState('');
 	const filteredCourses = getFilteredCourses(courses, searchKey);
-
-	// const resetCourses = () => {
-	// 	setFilteredCourses(courses);
-	// };
-
-	// const searchCourse = () => {
-	// if (!searchKey) {
-	// 	resetCourses();
-	// 	return;
-	// }
-
-	// const course = courses.find((course) => {
-	// 	return course.id === searchKey;
-	// });
-
-	// if (course) {
-	// 	setFilteredCourses([course]);
-	// 	return;
-	// }
-
-	// setFilteredCourses(
-	// 	courses.filter((course) => {
-	// 		const regEx = new RegExp(searchKey, 'gi');
-	// 		return regEx.test(course.title);
-	// 	})
-	// );
-	// };
 
 	const CoursesList = () => {
 		return (
@@ -98,12 +69,7 @@ export const Courses = () => {
 			<section className='row'>
 				<div className='col'>
 					<nav className='row'>
-						<SearchBar
-							// resetCourses={resetCourses}
-							searchKey={searchKey}
-							setSearchKey={setSearchKey}
-							// searchCourse={searchCourse}
-						/>
+						<SearchBar searchKey={searchKey} setSearchKey={setSearchKey} />
 
 						<div className='col-6 justify-content-end d-flex'>
 							<Button
@@ -115,7 +81,6 @@ export const Courses = () => {
 							/>
 						</div>
 					</nav>
-
 					<CoursesList />
 				</div>
 			</section>

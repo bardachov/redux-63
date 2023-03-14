@@ -8,10 +8,7 @@ import Input from '../../../../common/Input/Input';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectAuthors } from '../../../../store/authors/selectors';
 
-import {
-	addAuthor as addAuthorAction,
-	deleteAuthor,
-} from '../../../../store/authors/slice';
+import { deleteAuthor, addAuthor } from '../../../../store/authors/api';
 
 const Authors = ({ courseAuthors, setCourseAuthors }) => {
 	const [authorName, setAuthorName] = useState('');
@@ -40,12 +37,8 @@ const Authors = ({ courseAuthors, setCourseAuthors }) => {
 			return;
 		}
 
-		dispatch(
-			addAuthorAction({
-				id: uuidv4(),
-				name: authorName,
-			})
-		);
+		dispatch(addAuthor(authorName));
+
 		setAuthorName('');
 	};
 
