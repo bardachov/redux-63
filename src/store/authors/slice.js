@@ -1,9 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { mockedAuthorsList as initState } from '../../constants';
+import { fetchAuthors } from './api';
 
 const authorsSlice = createSlice({
 	name: 'authors',
-	initialState: initState,
+	initialState: {
+		items: [],
+		isLoading: false,
+	},
 	reducers: {
 		addAuthor(state, action) {
 			state.push(action.payload);
@@ -13,6 +16,17 @@ const authorsSlice = createSlice({
 			authors.splice(index, 1);
 		},
 	},
+	extraReducers: (builder) => {
+		builder.addCase(fetchAuthors.fulfilled, (state, action) => {
+			state.items = action.payload;
+		});
+	},
+	// extraReducers: {
+	// 	[fetchAuthors.pending]() {},
+	// 	[fetchAuthors.fulfilled](state, action) {
+	// 		state.items = action.payload;
+	// 	},
+	// },
 });
 
 export const { addAuthor, deleteAuthor } = authorsSlice.actions;
