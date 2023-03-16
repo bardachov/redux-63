@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 import Button from '../../common/Button/Button';
 import CourseCard from './components/CourseCard/CourseCard';
@@ -8,63 +7,67 @@ import SearchBar from './components/SearchBar/SearchBar';
 import pipeDuration from '../../helpers/pipeDuration';
 
 import './Courses.css';
-import {
-	selectCourses,
-	selectFilteredCourses,
-} from '../../store/courses/selectors';
-import { selectAuthors } from '../../store/authors/selectors';
-
-const getFilteredCourses = (courses, searchKey) => {
-	return courses.filter((course) => {
-		const regEx = new RegExp(searchKey, 'gi');
-
-		return regEx.test(course.title);
-	});
-};
+import { useQueries, useQuery } from 'react-query';
+import axios from 'axios';
 
 export const Courses = () => {
 	const navigate = useNavigate();
-
-	const courses = useSelector(selectCourses);
-	const authorsList = useSelector(selectAuthors);
 	const [searchKey, setSearchKey] = useState('');
-	const filteredCourses = getFilteredCourses(courses, searchKey);
-	const filteredCourses1 = useSelector(selectFilteredCourses);
+
+	const [courses, authors] = useQueries([
+		{
+			queryKey: 'courses',
+			queryFn: () => {
+				return axios
+					.get('http://localhost:4000/courses/all')
+					.then((res) => res.data.result);
+			},
+			retry: 2,
+		},
+		{
+			queryKey: 'authors',
+			queryFn: () => {
+				return axios
+					.get('http://localhost:4000/authors/all')
+					.then((res) => res.data.result);
+			},
+			retry: 1,
+		},
+	]);
 
 	const CoursesList = () => {
 		return (
 			<div className='coursesList'>
-				{filteredCourses1.length ? (
-					filteredCourses1.map(
-						({
-							title,
-							description,
-							authors: courseAuthors,
-							duration,
-							creationDate,
-							id,
-							isFavorite,
-						}) => {
-							const authors = authorsList.filter((author) =>
-								courseAuthors.includes(author.id)
-							);
+				{courses.data.map(
+					({
+						title,
+						description,
+						authors: courseAuthors,
+						duration,
+						creationDate,
+						id,
+						isFavorite,
+					}) => {
+						const authorsList = authors.isSuccess
+							? authors.data.filter((author) =>
+									courseAuthors.includes(author.id)
+							  )
+							: [];
 
-							return (
-								<CourseCard
-									id={id}
-									title={title}
-									description={description}
-									authors={authors}
-									duration={pipeDuration(duration)}
-									creationDate={creationDate}
-									isFavorite={isFavorite}
-									key={id}
-								/>
-							);
-						}
-					)
-				) : (
-					<div className='text-center mt-2 mb-2'>No matched courses</div>
+						return (
+							<CourseCard
+								id={id}
+								title={title}
+								description={description}
+								authors={authorsList}
+								duration={pipeDuration(duration)}
+								creationDate={creationDate}
+								isFavorite={isFavorite}
+								key={id}
+								udateCourses={courses.refetch}
+							/>
+						);
+					}
 				)}
 			</div>
 		);
@@ -75,7 +78,7 @@ export const Courses = () => {
 			<section className='row'>
 				<div className='col'>
 					<nav className='row'>
-						<SearchBar searchKey={searchKey} setSearchKey={setSearchKey} />
+						{/* <SearchBar searchKey={searchKey} setSearchKey={setSearchKey} /> */}
 
 						<div className='col-6 justify-content-end d-flex'>
 							<Button
@@ -87,7 +90,8 @@ export const Courses = () => {
 							/>
 						</div>
 					</nav>
-					<CoursesList />
+					{courses.isLoading && 'Loading...'}
+					{courses.isSuccess && <CoursesList />}
 				</div>
 			</section>
 		</main>

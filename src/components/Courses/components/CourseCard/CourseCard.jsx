@@ -1,13 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
 import Button from '../../../../common/Button/Button';
 
-import { deleteCourse } from '../../../../store/courses/api';
-import { addCoursetoFavorite } from '../../../../store/courses/actionCreators';
-
 import './CourseCard.css';
+import { useMutation } from 'react-query';
+import axios from 'axios';
+import { queryClient } from '../../../../index';
 
 const CourseCard = ({
 	title,
@@ -17,9 +16,23 @@ const CourseCard = ({
 	creationDate,
 	id,
 	isFavorite,
+	udateCourses,
 }) => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+
+	const { mutate } = useMutation(
+		(id) => {
+			return axios
+				.delete(`http://localhost:4000/courses/${id}`)
+				.then((res) => res.data.result);
+		},
+		{
+			onSuccess: (resultMessage, id) => {
+				udateCourses();
+				alert(resultMessage);
+			},
+		}
+	);
 
 	return (
 		<article className='courseCard row'>
@@ -54,7 +67,7 @@ const CourseCard = ({
 						buttonText='Del'
 						buttonId={`Del-${id}`}
 						onClick={() => {
-							dispatch(deleteCourse(id));
+							return mutate(id);
 						}}
 					/>
 
@@ -63,7 +76,7 @@ const CourseCard = ({
 							buttonText='Add to Fav'
 							buttonId={`Fav-${id}`}
 							onClick={() => {
-								dispatch(addCoursetoFavorite(id));
+								// dispatch(addCoursetoFavorite(id));
 							}}
 						/>
 					)}
