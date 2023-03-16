@@ -5,8 +5,12 @@ import Input from '../../../../common/Input/Input';
 import Button from '../../../../common/Button/Button';
 
 import './SearchBar.css';
+import { useDispatch } from 'react-redux';
+import { setFilter } from '../../../../store/courses/actionCreators';
 
 const SearchBar = ({ resetCourses, setSearchKey, searchKey, searchCourse }) => {
+	const dispatch = useDispatch();
+
 	const clickHandler = (event) => {
 		event.preventDefault();
 		searchCourse();
@@ -35,6 +39,32 @@ const SearchBar = ({ resetCourses, setSearchKey, searchKey, searchCourse }) => {
 				buttonType='button'
 				onClick={clickHandler}
 				buttonText='Search'
+			/>
+			<Button
+				buttonId='filter-favorite'
+				buttonType='button'
+				onClick={() => {
+					dispatch(
+						setFilter({
+							type: 'favorite',
+							value: true,
+						})
+					);
+				}}
+				buttonText='favorites'
+			/>
+			<Button
+				buttonId='filter-notfavorite'
+				buttonType='button'
+				onClick={() => {
+					dispatch(
+						setFilter({
+							type: 'favorite',
+							value: false,
+						})
+					);
+				}}
+				buttonText='unfavorites'
 			/>
 		</div>
 	);

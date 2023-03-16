@@ -8,7 +8,10 @@ import SearchBar from './components/SearchBar/SearchBar';
 import pipeDuration from '../../helpers/pipeDuration';
 
 import './Courses.css';
-import { selectCourses } from '../../store/courses/selectors';
+import {
+	selectCourses,
+	selectFilteredCourses,
+} from '../../store/courses/selectors';
 import { selectAuthors } from '../../store/authors/selectors';
 
 const getFilteredCourses = (courses, searchKey) => {
@@ -26,12 +29,13 @@ export const Courses = () => {
 	const authorsList = useSelector(selectAuthors);
 	const [searchKey, setSearchKey] = useState('');
 	const filteredCourses = getFilteredCourses(courses, searchKey);
+	const filteredCourses1 = useSelector(selectFilteredCourses);
 
 	const CoursesList = () => {
 		return (
 			<div className='coursesList'>
-				{filteredCourses.length ? (
-					filteredCourses.map(
+				{filteredCourses1.length ? (
+					filteredCourses1.map(
 						({
 							title,
 							description,
@@ -39,6 +43,7 @@ export const Courses = () => {
 							duration,
 							creationDate,
 							id,
+							isFavorite,
 						}) => {
 							const authors = authorsList.filter((author) =>
 								courseAuthors.includes(author.id)
@@ -52,6 +57,7 @@ export const Courses = () => {
 									authors={authors}
 									duration={pipeDuration(duration)}
 									creationDate={creationDate}
+									isFavorite={isFavorite}
 									key={id}
 								/>
 							);

@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import Button from '../../../../common/Button/Button';
 
 import { deleteCourse } from '../../../../store/courses/api';
+import { addCoursetoFavorite } from '../../../../store/courses/actionCreators';
+
 import './CourseCard.css';
 
 const CourseCard = ({
@@ -14,6 +16,7 @@ const CourseCard = ({
 	duration,
 	creationDate,
 	id,
+	isFavorite,
 }) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -54,6 +57,16 @@ const CourseCard = ({
 							dispatch(deleteCourse(id));
 						}}
 					/>
+
+					{!isFavorite && (
+						<Button
+							buttonText='Add to Fav'
+							buttonId={`Fav-${id}`}
+							onClick={() => {
+								dispatch(addCoursetoFavorite(id));
+							}}
+						/>
+					)}
 				</div>
 			</div>
 		</article>

@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
-// import { mockedCoursesList as initState } from '../../constants';
-import { addCoursetoFavorite } from './actionCreators';
+
+import { addCoursetoFavorite, setFilter } from './actionCreators';
 import { fetchCourses, addCourse, deleteCourse } from './api';
 
 export const coursesReducer = createReducer(
@@ -8,6 +8,9 @@ export const coursesReducer = createReducer(
 		items: [],
 		isLoading: false,
 		error: null,
+		activeFilter: {
+			favorite: false,
+		},
 	},
 	(builder) => {
 		builder
@@ -20,12 +23,6 @@ export const coursesReducer = createReducer(
 				);
 				state.items.splice(index, 1);
 			})
-			.addCase(addCoursetoFavorite, (courses, action) => {
-				const index = courses.findIndex(({ id }) => id === action.payload);
-				const el = courses[index];
-
-				courses.splice(index, 1, { ...el, isFavorite: true });
-			})
 			.addCase(fetchCourses.pending, (state) => {
 				state.isLoading = true;
 			})
@@ -36,6 +33,16 @@ export const coursesReducer = createReducer(
 			.addCase(fetchCourses.fulfilled, (state, action) => {
 				state.items = action.payload;
 				state.isLoading = false;
+			})
+			.addCase(addCoursetoFavorite, (state, action) => {
+				const index = state.items.findIndex(({ id }) => id === action.payload);
+				const el = state.items[index];
+
+				state.items.splice(index, 1, { ...el, isFavorite: true });
+			})
+			.addCase(setFilter, (state, action) => {
+				const filter = action.payload;
+				state.activeFilter[filter.type] = filter.value;
 			});
 	}
 );
