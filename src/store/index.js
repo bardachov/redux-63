@@ -21,16 +21,13 @@
 // 3. Створюємо редюсер
 // 4. створюємо стору(store)
 
-import { legacy_createStore as createStore, combineReducers } from 'redux';
-import { devToolsEnhancer } from '@redux-devtools/extension';
+import { configureStore } from '@reduxjs/toolkit';
 import { coursesReducer } from './courses/reducer';
-import { authorReducer } from './authors/reducer';
+import { authorReducer } from './authors/slice';
 
-const enhancer = devToolsEnhancer();
-
-const rootReducer = combineReducers({
-	courses: coursesReducer,
-	authors: authorReducer,
+export const store = configureStore({
+	reducer: {
+		courses: coursesReducer,
+		authors: authorReducer,
+	},
 });
-
-export const store = createStore(rootReducer, enhancer);
