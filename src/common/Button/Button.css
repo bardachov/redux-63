@@ -12,3 +12,9 @@
   background-color: rgb(206, 89, 235);
   color: #fff
 }
+
+.button:disabled {
+  cursor: default;
+  background-color: aliceblue;
+  color: #000
+}

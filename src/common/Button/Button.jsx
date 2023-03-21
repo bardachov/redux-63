@@ -3,13 +3,20 @@ import PropTypes from 'prop-types';
 
 import './Button.css';
 
-const Button = ({ onClick, buttonText, buttonType = 'button', buttonId }) => {
+const Button = ({
+	onClick,
+	buttonText,
+	buttonType = 'button',
+	buttonId,
+	disabled,
+}) => {
 	return (
 		<button
 			className='button'
 			onClick={onClick}
 			type={buttonType}
 			id={buttonId}
+			disabled={disabled}
 		>
 			{buttonText}
 		</button>

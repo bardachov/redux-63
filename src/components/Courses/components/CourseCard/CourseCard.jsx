@@ -7,6 +7,7 @@ import './CourseCard.css';
 import { useMutation } from 'react-query';
 import axios from 'axios';
 import { queryClient } from '../../../../index';
+import { useUser } from '../../../../hooks/useUser';
 
 const CourseCard = ({
 	title,
@@ -19,11 +20,16 @@ const CourseCard = ({
 	udateCourses,
 }) => {
 	const navigate = useNavigate();
+	const { isAuth, jwt } = useUser();
 
 	const { mutate } = useMutation(
 		(id) => {
 			return axios
-				.delete(`http://localhost:4000/courses/${id}`)
+				.delete(`http://localhost:4000/courses/${id}`, {
+					headers: {
+						Authorization: jwt,
+					},
+				})
 				.then((res) => res.data.result);
 		},
 		{
@@ -54,33 +60,35 @@ const CourseCard = ({
 				<p>
 					<b>Created:</b> {creationDate}
 				</p>
-				<div>
-					<Button
-						buttonId='2'
-						buttonText='Show course'
-						onClick={() => {
-							navigate(`/courses/${id}`);
-						}}
-					/>
-
-					<Button
-						buttonText='Del'
-						buttonId={`Del-${id}`}
-						onClick={() => {
-							return mutate(id);
-						}}
-					/>
-
-					{!isFavorite && (
+				{!isAuth && (
+					<div>
 						<Button
-							buttonText='Add to Fav'
-							buttonId={`Fav-${id}`}
+							buttonId='2'
+							buttonText='Show course'
 							onClick={() => {
-								// dispatch(addCoursetoFavorite(id));
+								navigate(`/courses/${id}`);
 							}}
 						/>
-					)}
-				</div>
+
+						<Button
+							buttonText='Del'
+							buttonId={`Del-${id}`}
+							onClick={() => {
+								return mutate(id);
+							}}
+						/>
+
+						{!isFavorite && (
+							<Button
+								buttonText='Add to Fav'
+								buttonId={`Fav-${id}`}
+								onClick={() => {
+									// dispatch(addCoursetoFavorite(id));
+								}}
+							/>
+						)}
+					</div>
+				)}
 			</div>
 		</article>
 	);
